@@ -98,14 +98,6 @@ variables:
   if: '$SIMP_ENABLE_VALIDATION_STAGE == "no"'
   when: never
 
-.enable_acceptance_stage_unless_var: &enable_acceptance_stage_unless_var
-  if: '$SIMP_ENABLE_ACCEPTANCE_STAGE == "no"'
-  when: never
-
-.enable_compliance_stage_unless_var: &enable_compliance_stage_unless_var
-  if: '$SIMP_ENABLE_COMPLIANCE_STAGE == "no"'
-  when: never
-
 # For some reason, the rule regexes stopped matching line starts inside
 # $CI_COMMIT_MESSAGE with carets /^/, so we're using /\n?/ as a workaround.
 .skip_job_when_commit_message_says_to: &skip_job_when_commit_message_says_to
@@ -154,11 +146,9 @@ variables:
 .default_sanity_stage_rule: &default_sanity_stage_rule
   when: always
 
-
 # SIMP_MATRIX_LEVEL=1: Intended to run every commit
 .with_SIMP_ACCEPTANCE_MATRIX_LEVEL_1: &with_SIMP_ACCEPTANCE_MATRIX_LEVEL_1
   rules:
-    - <<: *enable_acceptance_stage_unless_var
     - <<: *skip_job_when_commit_message_says_to
     - <<: *force_run_job_when_var_and_lvl_1_or_above
     - <<: *force_run_job_when_commit_mssage_lvl_1_or_above
@@ -179,7 +169,6 @@ variables:
 # SIMP_MATRIX_LEVEL=2: Resource-heavy or redundant jobs
 .with_SIMP_ACCEPTANCE_MATRIX_LEVEL_2: &with_SIMP_ACCEPTANCE_MATRIX_LEVEL_2
   rules:
-    - <<: *enable_acceptance_stage_unless_var
     - <<: *skip_job_when_commit_message_says_to
     - <<: *force_run_job_when_var_and_lvl_2_or_above
     - <<: *force_run_job_when_commit_mssage_lvl_2_or_above
@@ -200,7 +189,6 @@ variables:
 # SIMP_MATRIX_LEVEL=3: Reserved for FULL matrix testing
 .with_SIMP_ACCEPTANCE_MATRIX_LEVEL_3: &with_SIMP_ACCEPTANCE_MATRIX_LEVEL_3
   rules:
-    - <<: *enable_acceptance_stage_unless_var
     - <<: *skip_job_when_commit_message_says_to
     - <<: *force_run_job_when_var_and_lvl_3_or_above
     - <<: *force_run_job_when_commit_mssage_lvl_3_or_above
