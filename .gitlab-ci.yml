@@ -92,7 +92,7 @@ variables:
 
 .enable_sanity_stage_unless_var: &enable_sanity_stage_unless_var
   if: '$SIMP_ENABLE_SANITY_STAGE == "no"'
-  when: always
+  when: never
 
 .enable_validation_stage_unless_var: &enable_validation_stage_unless_var
   if: '$SIMP_ENABLE_VALIDATION_STAGE == "no"'
@@ -273,6 +273,7 @@ sanity_checks:
   tags: ['docker']
   rules:
     - <<: *enable_sanity_stage_unless_var
+    - <<: *default_sanity_stage_rule
   script:
     - 'if `hash apt-get`; then apt-get update; fi'
     - 'if `hash apt-get`; then apt-get install -y rpm; fi'
