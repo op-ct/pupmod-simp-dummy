@@ -404,3 +404,4 @@ pup6.16.0-fips-compliance:
   script:
     - 'BEAKER_fips=yes echo bundle exec rake beaker:suites[compliance,default]'
 # inert line, inserted to trigger gitlab ci
+# inert line, inserted to trigger gitlab ci
