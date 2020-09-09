@@ -149,6 +149,10 @@ variables:
   if: '$SIMP_FORCE_RUN_MATRIX == "yes" && $SIMP_MATRIX_LEVEL =~ /^[3]$/'
   when: on_success
 
+# This looks ridiculous, but it's a hack avoid GLCI's linter from plastering
+# each pipeline UI with angry warnings when there's a single non-alias condition
+.default_sanity_stage_rule: &default_sanity_stage_rule
+  when: always
 
 
 # SIMP_MATRIX_LEVEL=1: Intended to run every commit
@@ -281,7 +285,6 @@ sanity_checks:
   tags: ['docker']
   rules:
     - <<: *enable_sanity_stage_unless_var
-    - when: always
   script:
     - 'if `hash apt-get`; then apt-get update; fi'
     - 'if `hash apt-get`; then apt-get install -y rpm; fi'
