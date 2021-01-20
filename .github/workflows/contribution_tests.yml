@@ -165,7 +165,7 @@ jobs:
   trigger-if-user-has-repo-permissions:
     name: 'Trigger CI (if permitted)'
     ### if: ${{ GITHUB_REPOSITORY_OWNER == 'simp' }}
-    ### if: github.event.pull_request.merged == 'false' # <-- the gitlab mirror will pick up the change
+    if:  github.event_name == 'pull_request' &&  github.event.pull_request.merged == 'false' # <-- the gitlab mirror will pick up the change
     continue-on-error: true
 
     needs: [puppet-syntax, glci-syntax, files, puppet-style, spec-tests]
@@ -241,7 +241,11 @@ jobs:
           else
             echo No active pipelines found
           fi
-          echo "TODO - Trigger GLCI pipeline [GITLAB_API_URL: $GITLAB_API_URL, GITLAB_API_PRIVATE_TOKEN: $GITLAB_API_PRIVATE_TOKEN]"
+
+          echo "== Pushing $GIT_BRANCH to gitlab"
+          git remote add gitlab "https://oauth2:${GITLAB_API_PRIVATE_TOKEN}@${GITLAB_SERVER_URL#*://}/${GITLAB_ORG}/${GITXXB_REPO_NAME}.git"
+          git branch -av
+          git push gitlab "$GIT_BRANCH" -f
 
       - name: When user does NOT have Repo Permissions
         if: steps.user-repo-permissions.outputs.result == 'false'
